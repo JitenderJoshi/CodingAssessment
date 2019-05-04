@@ -1,0 +1,70 @@
+create user railway identified by railway;
+GRANT CONNECT TO railway;
+GRANT CONNECT, RESOURCE, DBA TO railway;
+
+create table railway.station(
+	stationcode varchar2(10) NOT NULL,
+	stationName varchar2(30) NOT NULL,
+	CONSTRAINT stations_pk PRIMARY KEY (stationcode)
+);
+
+
+
+create table railway.train(
+	trainnumber varchar2(10) NOT NULL,
+	startStation varchar2(30) NOT NULL,
+	endStation varchar2(30) NOT NULL,
+	startTime date NOT NULL,
+	endTime date NOT NULL,
+	RunningDays varchar2(30) NOT NULL,
+	CONSTRAINT train_pk PRIMARY KEY (trainnumber),
+	foreign key (startStation) references station(stationcode),
+	foreign key (endStation) references station(stationcode)
+);
+
+
+create table railway.trainroute(
+	trainnumber varchar2(10) NOT NULL,
+	trainroutesequence varchar2(10) NOT NULL,
+	station varchar2(30) NOT NULL,
+	arrivaltime date,
+	depaturetime date,
+	day varchar2(5) NOT NULL,
+	CONSTRAINT trainroute_pk PRIMARY KEY (trainnumber,trainroutesequence),
+	foreign key (trainnumber) references train(trainnumber),
+	foreign key (station) references station(stationcode)
+);
+
+
+insert into railway.station values('ndls', 'new delhi');
+insert into railway.station values('pani', 'panipat');
+insert into railway.station values('umb', 'ambala cantt');
+insert into railway.station values('chd', 'chandigarh');
+insert into railway.station values('asr', 'amritsar');
+commit;
+
+insert into railway.train values('11220', 'ndls','chd', TO_DATE('07:30:00 AM', 'hh12:mi:ss AM'), TO_DATE('12:30:00 PM', 'hh12:mi:ss AM'),'SU,MO,TU,WE,TH,FR,SA');
+insert into railway.train values('11225', 'ndls','chd', TO_DATE('05:30:00 PM', 'hh12:mi:ss AM'), TO_DATE('08:30:00 PM', 'hh12:mi:ss AM'),'MO,TU,WE,TH,FR');
+insert into railway.train values('22110', 'ndls','asr', TO_DATE('09:30:00 AM', 'hh12:mi:ss AM'), TO_DATE('03:30:00 PM', 'hh12:mi:ss AM'),'SU,MO,TU,WE,TH,FR,SA');
+insert into railway.train values('22115', 'ndls','asr', TO_DATE('01:30:00 PM', 'hh12:mi:ss AM'), TO_DATE('07:30:00 PM', 'hh12:mi:ss AM'),'MO,TU,WE,TH,FR');
+commit;
+
+insert into railway.trainroute values('11220', '1', 'ndls', null, TO_DATE('07:30:00 AM', 'hh12:mi:ss AM'),'1');
+insert into railway.trainroute values('11220', '2', 'pani', TO_DATE('08:30:00 AM', 'hh12:mi:ss AM'), TO_DATE('08:45:00 AM', 'hh12:mi:ss AM'),'1');
+insert into railway.trainroute values('11220', '3', 'umb', TO_DATE('11:30:00 AM', 'hh12:mi:ss AM'), TO_DATE('11:45:00 AM', 'hh12:mi:ss AM'),'1');
+insert into railway.trainroute values('11220', '4', 'chd', TO_DATE('12:30:00 PM', 'hh12:mi:ss AM'), null,'1');
+insert into railway.trainroute values('11225', '1', 'ndls', null, TO_DATE('05:30:00 PM', 'hh12:mi:ss AM'),'1');
+insert into railway.trainroute values('11225', '2', 'umb', TO_DATE('07:30:00 PM', 'hh12:mi:ss AM'), TO_DATE('07:45:00 PM', 'hh12:mi:ss AM'),'1');
+insert into railway.trainroute values('11225', '3', 'chd', TO_DATE('08:30:00 PM', 'hh12:mi:ss AM'), null,'1');
+insert into railway.trainroute values('22110', '1', 'ndls', null, TO_DATE('09:30:00 AM', 'hh12:mi:ss AM'),'1');
+insert into railway.trainroute values('22110', '2', 'pani', TO_DATE('10:30:00 AM', 'hh12:mi:ss AM'), TO_DATE('10:45:00 AM', 'hh12:mi:ss AM'),'1');
+insert into railway.trainroute values('22110', '3', 'umb', TO_DATE('12:30:00 PM', 'hh12:mi:ss AM'), TO_DATE('12:45:00 PM', 'hh12:mi:ss AM'),'1');
+insert into railway.trainroute values('22110', '4', 'asr', TO_DATE('03:30:00 PM', 'hh12:mi:ss AM'), null,'1');
+insert into railway.trainroute values('22115', '1', 'ndls', null, TO_DATE('01:30:00 PM', 'hh12:mi:ss AM'),'1');
+insert into railway.trainroute values('22115', '2', 'umb', TO_DATE('05:30:00 PM', 'hh12:mi:ss AM'), TO_DATE('05:45:00 PM', 'hh12:mi:ss AM'),'1');
+insert into railway.trainroute values('22115', '3', 'asr', TO_DATE('07:30:00 PM', 'hh12:mi:ss AM'), null,'1');
+
+commit;
+
+
+
